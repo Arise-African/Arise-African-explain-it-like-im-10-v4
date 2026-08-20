@@ -1,0 +1,1 @@
+import { describe,it,expect } from 'vitest'; import { LessonSchema } from '../src/lib/lesson-schema'; describe('lesson validation',()=>it('rejects incomplete output',()=>expect(()=>LessonSchema.parse({title:'x'})).toThrow()));
