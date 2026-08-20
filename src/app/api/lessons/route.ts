@@ -1,0 +1,3 @@
+import { NextRequest, NextResponse } from 'next/server'; import { z } from 'zod'; import { generateLesson } from '@/lib/ai'; import { rateLimit } from '@/lib/rate-limit';
+const Input=z.object({topic:z.string().trim().min(2).max(180),age:z.number().int().min(5).max(18),locale:z.string().max(10)});
+export async function POST(req:NextRequest){const ip=req.headers.get('x-forwarded-for')?.split(',')[0]||'local';if(!rateLimit(ip))return NextResponse.json({error:'Please wait a minute before making another lesson.'},{status:429});try{return NextResponse.json(await generateLesson(...Object.values(Input.parse(await req.json())) as [string,number,string]))}catch{return NextResponse.json({error:'I could not make that lesson. Try a different topic.'},{status:400})}}
